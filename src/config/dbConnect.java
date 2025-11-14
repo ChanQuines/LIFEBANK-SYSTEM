@@ -11,7 +11,7 @@ public class dbConnect {
             Class.forName("org.sqlite.JDBC");
             con = DriverManager.getConnection("jdbc:sqlite:lifebank.db");
         } catch (Exception e) {
-            System.out.println("❌ Database connection failed: " + e.getMessage());
+            System.out.println("Database connection failed: " + e.getMessage());
         }
         return con;
     }
@@ -28,17 +28,11 @@ public class dbConnect {
                 "id INTEGER PRIMARY KEY AUTOINCREMENT," +
                 "seed_name TEXT NOT NULL," +
                 "quantity INTEGER NOT NULL," +
-                "date TEXT NOT NULL)";
-
-        try (Connection conn = connectDB(); Statement stmt = conn.createStatement()) {
-            stmt.execute(usersTable);
-            stmt.execute(seedsTable);
-            System.out.println("✅ Tables created or already exist.");
-        } catch (SQLException e) {
-            System.out.println("Error creating tables: " + e.getMessage());
-        }
+               "date TEXT NOT NULL)";
+       
+        
     }
-
+    
     public void addRecord(String sql, Object... values) {
         try (Connection conn = connectDB();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {

@@ -61,7 +61,7 @@ public class Seed {
         String seedName = getSeedNameById(id);
         tm.recordTransaction(seedName, qty, "UPDATE", user.get("username").toString());
 
-        System.out.println("✅ Quantity updated!");
+        System.out.println("Quantity updated!");
     }
 
     public void deleteSeed(Scanner sc, Map<String, Object> user) {

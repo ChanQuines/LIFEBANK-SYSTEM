@@ -11,7 +11,7 @@ public class MainClass {
 
     public static void main(String[] args) {
 
-        dbConnect.createTables(); // Ensure tables exist
+        dbConnect.createTables();
 
         Scanner sc = new Scanner(System.in);
         User userSystem = new User();
@@ -19,28 +19,24 @@ public class MainClass {
 
         System.out.println("=== Welcome to Seeds Inventory System ===");
 
-        // 🔹 Check if any user exists
+    
         dbConnect db = new dbConnect();
         String checkUsers = "SELECT * FROM users";
         List<Map<String, Object>> existingUsers = db.fetchRecords(checkUsers);
 
-        // 🔹 If no users, create default admin
         if (existingUsers.isEmpty()) {
-            System.out.println("⚙️ No users found. Creating default admin...");
+            System.out.println("No users found. Creating default admin!");
             String sql = "INSERT INTO users(username, email, password, role) VALUES(?,?,?,?)";
             db.addRecord(sql, "Administrator", "admin@example.com", "admin123", "Admin");
-            System.out.println("✅ Default admin created:");
+            System.out.println("Default admin created:");
             System.out.println("   Email: admin@example.com");
             System.out.println("   Password: admin123");
         }
 
-        // 🔹 Login (loop handled inside User.login)
         Map<String, Object> user = userSystem.login(sc);
 
         boolean isAdmin = userSystem.isAdmin(user);
         int choice;
-
-        // 🔹 Menu based on role
         do {
             System.out.println("\n========= MENU =========");
             if (isAdmin) {
@@ -101,10 +97,10 @@ public class MainClass {
                         sm.deleteSeed(sc, user);
                         break;
                     case 0:
-                        System.out.println("❎ Exiting... Thank you!");
+                        System.out.println("Exiting... Thank you!");
                         break;
                     default:
-                        System.out.println("❌ Invalid choice!");
+                        System.out.println("Invalid choice!");
                 }
             }
 
