@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?><sqlb_project><db path="" readonly="0" foreign_keys="" case_sensitive_like="" temp_store="" wal_autocheckpoint="" synchronous=""/><attached/><window><main_tabs open="structure browser pragmas query" current="3"/></window><tab_structure><column_width id="0" width="300"/><column_width id="1" width="0"/><column_width id="2" width="100"/><column_width id="3" width="2062"/><column_width id="4" width="0"/></tab_structure><tab_browse><table title="." custom_title="0" dock_id="2" table="0,0:"/><dock_state state="000000ff00000000fd00000001000000020000000000000000fc0100000002fb000000160064006f0063006b00420072006f00770073006500310100000000ffffffff0000000000000000fb000000160064006f0063006b00420072006f00770073006500320100000000ffffffff0000011e00ffffff000000000000000000000004000000040000000800000008fc00000000"/><default_encoding codec=""/><browse_table_settings/></tab_browse><tab_sql><sql name="SQL 1*">PRAGMA foreign_keys = OFF;
+
+DROP TABLE IF EXISTS &quot;Inventory&quot;;
+DROP TABLE IF EXISTS &quot;Seeds&quot;;
+
+PRAGMA foreign_keys = ON;x</sql><sql name="SQL 2*">CREATE TABLE &quot;Seeds&quot; (
+    &quot;seed_id&quot; INTEGER NOT NULL,
+    &quot;common_name&quot; TEXT NOT NULL,
+    &quot;variety&quot; TEXT NOT NULL,
+    &quot;default_unit&quot; TEXT NOT NULL,
+    PRIMARY KEY(&quot;seed_id&quot; AUTOINCREMENT)
+);</sql><sql name="SQL 3*">CREATE TABLE &quot;Inventory&quot; (
+    &quot;seed_id&quot; INTEGER NOT NULL,
+    &quot;location_id&quot; INTEGER NOT NULL,
+    &quot;quantity_on_hand&quot; REAL NOT NULL,
+    &quot;date_last_counted&quot; TEXT NOT NULL,
+    
+    PRIMARY KEY(&quot;seed_id&quot;, &quot;location_id&quot;),
+    FOREIGN KEY(&quot;seed_id&quot;) REFERENCES &quot;Seeds&quot;(&quot;seed_id&quot;) ON DELETE CASCADE,
+    FOREIGN KEY(&quot;location_id&quot;) REFERENCES &quot;Locations&quot;(&quot;location_id&quot;)
+);</sql><sql name="SQL 4*">INSERT INTO Locations (location_name, storage_method, contact_person) 
+SELECT 'Lab Freezer 1', 'Ultra Low Temperature', 'System Default'
+WHERE NOT EXISTS (SELECT 1 FROM Locations WHERE location_name = 'Lab Freezer 1');</sql><current_tab id="1"/></tab_sql></sqlb_project>
