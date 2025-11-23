@@ -30,11 +30,11 @@ public class Tran {
             userExecuted
         );
 
-        System.out.println("🗒️ Logged Transaction: " + actionType + " | Item: " + itemName + " | Qty: " + quantityAffected);
+        System.out.println("Logged Transaction: " + actionType + " | Item: " + itemName + " | Qty: " + quantityAffected);
     }
 
     public void viewTransactions() {
-        System.out.println("\n========= 📜 FULL TRANSACTION LOG (ADMIN VIEW) =========");
+        System.out.println("\n========================================= FULL TRANSACTION LOG (ADMIN VIEW) =========================================");
 
         String sqlQuery = "SELECT transaction_id, item_name, quantity_affected, action_type, timestamp, user_executed " +
                           "FROM Transactions ORDER BY timestamp DESC;";
@@ -43,11 +43,11 @@ public class Tran {
         
         if (records.isEmpty()) {
             System.out.println("No transaction records found in the log.");
-            System.out.println("===============================================================");
+            System.out.println("=================================================================================================");
             return;
         }
 
-        String format = "%-5s | %-30s | %-12s | %-20s | %-25s | %-15s%n";
+        String format = "%-5s | %-30s | %-12s | %-25s | %-25s | %-15s%n";
         
         System.out.printf(format, "ID", "Item Name", "Quantity", "Action", "Timestamp", "User");
         System.out.println("-------------------------------------------------------------------------------------------------------------------");

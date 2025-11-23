@@ -94,17 +94,17 @@ public class Seed {
     public void createLocation(Scanner sc) {
         System.out.println("\n--- CREATE NEW STORAGE LOCATION ---");
         
-        System.out.print("Enter Location Name (e.g., Cold Room 2A): ");
+        System.out.print("Enter Location Name : ");
         String locationName = sc.nextLine();
         
-        System.out.print("Enter Storage Method (e.g., -80C Freezer, Ambient Shelf): ");
+        System.out.print("Enter Storage Method : ");
         String storageMethod = sc.nextLine();
         
-        System.out.print("Enter Contact Person (optional, e.g., Lab Manager): ");
+        System.out.print("Enter Contact Person : ");
         String contactPerson = sc.nextLine();
 
         if (locationName.trim().isEmpty()) {
-            System.out.println("❌ Location name cannot be empty.");
+            System.out.println("Location name cannot be empty.");
             return;
         }
 
@@ -116,37 +116,37 @@ public class Seed {
         
         if (!results.isEmpty()) {
              Number idNumber = (Number) results.get(0).get("location_id"); 
-             System.out.println("✅ Location '" + locationName + "' successfully created with ID: " + idNumber.intValue());
+             System.out.println("Location '" + locationName + "' successfully created with ID: " + idNumber.intValue());
              
              // Record Transaction
              String username = (String) this.db.fetchRecords("SELECT username FROM users WHERE role = 'Admin' LIMIT 1").get(0).get("username"); // Best effort to get an admin name
              this.tranSystem.recordTransaction("Location: " + locationName, 0.0, "LOCATION_CREATED", username);
         } else {
-             System.out.println("⚠️ Location created, but failed to retrieve new ID.");
+             System.out.println("Location created, but failed to retrieve new ID.");
         }
     }
 
     public void addSeed(Scanner sc, Map<String, Object> user) {
         System.out.println("\n--- ADD NEW SEED AND INITIAL STOCK ---");
         
-        System.out.print("Enter Common Name (e.g., Tomato): ");
+        System.out.print("Enter Common Name : ");
         String commonName = sc.nextLine();
         
-        System.out.print("Enter Variety/Line Name (e.g., Roma VF): ");
+        System.out.print("Enter Variety/Line Name : ");
         String variety = sc.nextLine();
         
-        System.out.print("Enter Initial Quantity to Store (e.g., 500.0): ");
+        System.out.print("Enter Initial Quantity to Store : ");
         String qtyInput = sc.nextLine();
         double quantityOnHand;
         try {
             quantityOnHand = Double.parseDouble(qtyInput);
             if (quantityOnHand < 0) throw new NumberFormatException();
         } catch (NumberFormatException e) {
-            System.out.println("❌ Error: Quantity must be a valid non-negative number. Aborting.");
+            System.out.println("Error: Quantity must be a valid non-negative number. Aborting.");
             return;
         }
 
-        System.out.print("Enter Default Unit (e.g., seeds, grams, vials): ");
+        System.out.print("Enter Default Unit : ");
         String defaultUnit = sc.nextLine();
         
         viewLocations(); 
@@ -156,11 +156,11 @@ public class Seed {
         try {
             locationId = Integer.parseInt(locationInput);
             if (this.db.fetchRecords("SELECT location_id FROM Locations WHERE location_id = ?", locationId).isEmpty()) {
-                 System.out.println("❌ Error: Location ID " + locationId + " does not exist.");
+                 System.out.println("Error: Location ID " + locationId + " does not exist.");
                  return;
             }
         } catch (NumberFormatException e) {
-            System.out.println("❌ Error: Location ID must be an integer. Aborting.");
+            System.out.println("Error: Location ID must be an integer. Aborting.");
             return;
         }
         
@@ -180,7 +180,7 @@ public class Seed {
             if (!results.isEmpty() && results.get(0).get("id") instanceof Number) {
                 seedId = ((Number) results.get(0).get("id")).intValue();
             } else {
-                System.out.println("⚠️ WARNING: Failed to retrieve new Seed ID. Aborting inventory insertion.");
+                System.out.println("WARNING: Failed to retrieve new Seed ID. Aborting inventory insertion.");
                 return;
             }
 
@@ -214,11 +214,11 @@ public class Seed {
         String username = (String) user.get("username");
         this.tranSystem.recordTransaction(logItemName, quantityOnHand, transactionAction, username);
         
-        System.out.println("🎉 Successfully processed seed (ID: " + seedId + "). " + inventoryMessage);
+        System.out.println("Successfully processed seed (ID: " + seedId + "). " + inventoryMessage);
     }
 
     public void viewSeeds() {
-        System.out.println("\n========= 🔍 CURRENT RESEARCH SEED INVENTORY =========");
+        System.out.println("\n========= CURRENT RESEARCH SEED INVENTORY =========");
 
         String sqlQuery = "SELECT " +
                               "S.seed_id, S.common_name, S.variety, S.default_unit, " +
@@ -268,7 +268,7 @@ public class Seed {
         try {
             seedId = Integer.parseInt(idInput);
         } catch (NumberFormatException e) {
-            System.out.println("❌ Error: Seed ID must be a number. Aborting.");
+            System.out.println("Error: Seed ID must be a number. Aborting.");
             return;
         }
 
@@ -279,7 +279,7 @@ public class Seed {
         List<Map<String, Object>> results = this.db.fetchRecords(fetchSql, seedId);
 
         if (results.isEmpty()) {
-            System.out.println("❌ Seed ID " + seedId + " not found in inventory.");
+            System.out.println("Seed ID " + seedId + " not found in inventory.");
             return;
         }
 
@@ -288,21 +288,21 @@ public class Seed {
         double currentQty = ((Number) record.get("quantity_on_hand")).doubleValue();
 
         System.out.println("\nFound: " + itemName + " (Current Qty: " + currentQty + ")");
-        System.out.print("Enter new quantity adjustment (e.g., 500.5 to add, -50.2 to remove): ");
+        System.out.print("Enter new quantity adjustment ( ADD=POSITIVE(500), REMOVE=NEGATIVE(-500)): ");
         
         String adjInput = sc.nextLine();
         double adjustment;
         try {
             adjustment = Double.parseDouble(adjInput);
         } catch (NumberFormatException e) {
-            System.out.println("❌ Error: Adjustment must be a valid number. Aborting.");
+            System.out.println("Error: Adjustment must be a valid number. Aborting.");
             return;
         }
         
         double newQty = currentQty + adjustment;
 
         if (newQty < 0) {
-            System.out.println("❌ Error: Cannot set quantity below zero (" + newQty + "). Update aborted.");
+            System.out.println("Error: Cannot set quantity below zero (" + newQty + "). Update aborted.");
             return;
         }
 
@@ -310,12 +310,11 @@ public class Seed {
         String updateSql = "UPDATE Inventory SET quantity_on_hand = ?, date_last_counted = ? WHERE seed_id = ?";
         this.db.updateRecord(updateSql, newQty, dateLastCounted, seedId);
         
-        // --- STEP 3: Record Transaction ---
         String username = (String) user.get("username");
         String actionType = adjustment > 0 ? "STOCK_IN" : "STOCK_OUT";
         this.tranSystem.recordTransaction(itemName, adjustment, actionType, username);
         
-        System.out.println("🎉 Successfully updated " + itemName + ". New Quantity: " + String.format("%.2f", newQty));
+        System.out.println("Successfully updated " + itemName + ". New Quantity: " + String.format("%.2f", newQty));
     }
     
     public void deleteSeed(Scanner sc, Map<String, Object> user) {
@@ -329,7 +328,7 @@ public class Seed {
         try {
             seedId = Integer.parseInt(idInput);
         } catch (NumberFormatException e) {
-            System.out.println("❌ Error: Seed ID must be a number. Aborting.");
+            System.out.println("Error: Seed ID must be a number. Aborting.");
             return;
         }
 
@@ -340,7 +339,7 @@ public class Seed {
         List<Map<String, Object>> results = this.db.fetchRecords(fetchSql, seedId);
 
         if (results.isEmpty()) {
-            System.out.println("❌ Seed ID " + seedId + " not found in the database.");
+            System.out.println("Seed ID " + seedId + " not found in the database.");
             return;
         }
         
@@ -348,11 +347,11 @@ public class Seed {
         String itemName = record.get("common_name") + " - " + record.get("variety");
         double deletedQty = ((Number) record.get("quantity_on_hand")).doubleValue();
   
-        System.out.print("⚠️ Are you sure you want to delete '" + itemName + "' (Qty: " + String.format("%.2f", deletedQty) + ")? (yes/no): ");
+        System.out.print("Are you sure you want to delete '" + itemName + "' (Qty: " + String.format("%.2f", deletedQty) + ")? (yes/no): ");
         String confirmation = sc.nextLine();
 
         if (!confirmation.trim().equalsIgnoreCase("yes")) {
-            System.out.println("🚫 Deletion cancelled.");
+            System.out.println("Deletion cancelled.");
             return;
         }
 
@@ -362,6 +361,6 @@ public class Seed {
         String username = (String) user.get("username");
         this.tranSystem.recordTransaction(itemName, -deletedQty, "DELETED", username); 
         
-        System.out.println("🗑️ Successfully deleted seed: " + itemName + " (ID: " + seedId + "). Inventory cleared.");
+        System.out.println("Successfully deleted seed: " + itemName + " (ID: " + seedId + "). Inventory cleared.");
     }
 }

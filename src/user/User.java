@@ -70,7 +70,7 @@ public static void displayUserMenu() {
                 String storedPassword = (String) user.get("password");
 
                 if (plainPassword.equals(storedPassword)) {
-                    System.out.println("✅ Login Successful! Welcome, " + user.get("username") + " (" + user.get("role") + ")");
+                    System.out.println("Login Successful! Welcome, " + user.get("username") + " (" + user.get("role") + ")");
                     return user;
                 }
             }
@@ -98,7 +98,7 @@ public static void displayUserMenu() {
         } while (plainPassword.trim().isEmpty());
 
 
-        System.out.print("Enter Role (Admin/User) [Default: User]: ");
+        System.out.print("Enter Role (Admin/User): ");
         String role = sc.nextLine();
         if (role.trim().isEmpty()) role = "User";
 
@@ -106,9 +106,9 @@ public static void displayUserMenu() {
 
         try {
             this.db.addRecord(sql, username, email, plainPassword, role);
-            System.out.println("✅ User '" + username + "' added successfully! (Stored as plain text)");
+            System.out.println("User '" + username + "' added successfully!");
         } catch (Exception e) {
-            System.out.println("❌ Failed to add user. Email may already exist or DB error occurred.");
+            System.out.println("Failed to add user. Email may already exist or DB error occurred.");
         }
     }
     
